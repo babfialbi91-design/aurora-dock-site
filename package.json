@@ -1,0 +1,13 @@
+{
+  "name": "aurora-dock-site",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Landing page for the Aurora Dock theme for Seelen UI",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.112.0"
+  }
+}

@@ -1,0 +1,271 @@
+﻿<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aurora Dock — هوية زجاجية لـ Seelen UI</title>
+<meta name="description" content="Aurora Dock: ثيم أحادي اللون لـ Seelen UI — دوك زجاجي، شريط علوي، قائمة ابدأ، Alt+Tab ومساحات عمل، مع 12 خلفية 4K.">
+<meta name="theme-color" content="#08090a">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Aurora Dock — هوية زجاجية لـ Seelen UI">
+<meta property="og:description" content="دوك زجاجي أحادي اللون، 19 نمط وجت، و12 خلفية 4K. تحميل مباشر بملف واحد.">
+<meta property="og:image" content="previews/00-set.jpg">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="glow" aria-hidden="true"></div>
+
+<header class="nav">
+  <a class="brand" href="#top" aria-label="Aurora Dock">
+    <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M20.62 4.55a12.2 12.2 0 1 0 7.05 15.3A10.4 10.4 0 0 1 20.62 4.55Z" fill="none" stroke="currentColor" stroke-width="1.4"/>
+      <circle cx="24.3" cy="10" r="1.9" fill="currentColor"/>
+    </svg>
+    <span class="brand__name">Aurora&nbsp;Dock</span>
+  </a>
+
+  <nav class="nav__links" aria-label="التنقل">
+    <a href="#install">التركيب</a>
+    <a href="#features">المزايا</a>
+    <a href="#wallpapers">الخلفيات</a>
+    <a href="#terms">الشروط</a>
+  </nav>
+
+  <div class="nav__side">
+    <span class="pill" id="version" aria-live="polite">v1.0.9</span>
+    <a class="btn btn--ghost btn--sm" href="https://github.com/babfialbi91-design/seelen-aurora-dock" target="_blank" rel="noopener">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      <span>المستودع</span>
+    </a>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="hero__copy">
+      <p class="eyebrow"><span class="dot"></span> Seelen UI 2.8 · Windows 10 / 11</p>
+      <h1>ضوء هادئ<br><em>على زجاج داكن.</em></h1>
+      <p class="lede">
+        هوية أحادية اللون بالكامل: دوك بموجة تكبير، شريط علوي، قائمة ابدأ،
+        Alt+Tab ومساحات عمل، إشعارات، و12 خلفية 4K — كلها من مصدر واحد.
+      </p>
+
+      <div class="cta">
+        <button class="btn btn--primary" id="download" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M12 3.5v11m0 0 4.2-4.2M12 14.5 7.8 10.3M4.5 18.5h15"/></svg>
+          <span class="btn__label">تحميل الثيم</span>
+          <span class="btn__meta" aria-hidden="true">.slu</span>
+        </button>
+        <a class="btn btn--ghost" href="https://github.com/babfialbi91-design/seelen-aurora-dock" target="_blank" rel="noopener">
+          استعراض الكود
+        </a>
+      </div>
+
+      <p class="fineprint" id="download-hint">ملف واحد · بلا تثبيت · يفتح مباشرة في Seelen</p>
+
+      <dl class="stats">
+        <div><dt>نمط وجت</dt><dd>19</dd></div>
+        <div><dt>خلفية 4K</dt><dd>12</dd></div>
+        <div><dt>وضعان</dt><dd>2</dd></div>
+      </dl>
+    </div>
+
+    <div class="hero__stage" aria-hidden="true">
+      <div class="screen">
+        <img class="screen__wall" src="previews/09-prism.jpg" alt="" width="1600" height="900" decoding="async">
+        <div class="screen__shade"></div>
+        <div class="screen__bar"><span></span><span></span><span></span></div>
+        <div class="dock" id="dock">
+          <i class="tile" data-k="0"></i>
+          <i class="tile tile--glyph" data-k="1"></i>
+          <i class="tile" data-k="2"></i>
+          <i class="tile tile--dot" data-k="3"></i>
+          <i class="tile" data-k="4"></i>
+          <i class="tile tile--glyph" data-k="5"></i>
+          <i class="tile" data-k="6"></i>
+        </div>
+      </div>
+      <p class="stage__hint">مرّر المؤشر على الدوك وشوف الموجة</p>
+      <div class="seam" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <section class="strip" aria-label="عناصر الهوية">
+    <span>دوك</span><i></i><span>شريط علوي</span><i></i><span>قائمة ابدأ</span><i></i><span>Alt+Tab</span><i></i><span>مساحات عمل</span><i></i><span>إشعارات</span><i></i><span>تراي</span>
+  </section>
+
+  <section class="section" id="install">
+    <div class="section__head">
+      <h2>ثلاث خطوات</h2>
+      <p>لا إعدادات، لا Terminal — ملف واحد فقط.</p>
+    </div>
+
+    <ol class="steps">
+      <li class="card step">
+        <span class="step__n">01</span>
+        <h3>نزّل الحزمة</h3>
+        <p>اضغط «تحميل الثيم» فيُجلب أحدث إصدار باسم <code>aurora-dock.slu</code> مباشرة.</p>
+      </li>
+      <li class="card step">
+        <span class="step__n">02</span>
+        <h3>افتحه</h3>
+        <p>افتح الملف بنقرة مزدوجة — يتعرّف عليه Seelen تلقائياً ويبدأ التثبيت. أو اسحبه على نافذة Seelen.</p>
+      </li>
+      <li class="card step">
+        <span class="step__n">03</span>
+        <h3>فعّله</h3>
+        <p>من إعدادات Seelen: <b>Themes → Aurora Dock</b>. وإن لم يظهر، أعد تشغيل Seelen مرة واحدة.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="section" id="features">
+    <div class="section__head">
+      <h2>ما يميزه</h2>
+      <p>مونوكروم صارم، وزجاج يتنفّس — بلا زخرفة زائدة.</p>
+    </div>
+
+    <div class="grid">
+      <article class="card feat">
+        <h3>موجة تكبير حقيقية</h3>
+        <p>تكبر الأيقونة تحت المؤشر وتتناقص جاراتها بمنحنى ناعم — نفس منطق الدوك الأصلي، بلا اهتزاز.</p>
+      </article>
+      <article class="card feat">
+        <h3>لمعان أورورا</h3>
+        <p>خيط ضوء رفيع يمرّ على حافة الزجاج كل 14 ثانية، بسرعة وشدّة قابلتين للضبط.</p>
+      </article>
+      <article class="card feat">
+        <h3>وضعان من مصدر واحد</h3>
+        <p>يتبع <code>prefers-color-scheme</code>: زجاج أسود بالليل، أبيض بالحبر بالنهار.</p>
+      </article>
+      <article class="card feat">
+        <h3>Spotlight</h3>
+        <p>البلاطة تحت المؤشر تُضاء من الأسفل، وجاراتها تأخذ هالة خفيفة — لا وميض.</p>
+      </article>
+      <article class="card feat">
+        <h3>عربية صحيحة</h3>
+        <p>أرقام جدولية و<code>plaintext</code> للنصوص المختلطة، مع محاذاة RTL كاملة.</p>
+      </article>
+      <article class="card feat">
+        <h3>ميزانية مؤثرات</h3>
+        <p>متغيّر واحد <code>--ads-fx</code> يخفض الضباب على البطارية، ويوقف الحركات عند الطلب.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" id="wallpapers">
+    <div class="section__head">
+      <h2>12 خلفية 4K</h2>
+      <p>«دراسات ضوء»: شكل واحد على سطح مطفي، بلا أبيض محروق ولا أسود كامل.</p>
+    </div>
+
+    <div class="shots">
+      <figure class="card shot">
+        <a href="previews/03-dunes.jpg" target="_blank" rel="noopener" aria-label="03-dunes — كثبان">
+          <img src="previews/03-dunes.jpg" alt="03-dunes" loading="lazy" width="1600" height="900">
+        </a>
+        <figcaption><span>03-dunes</span><span>كثبان</span></figcaption>
+      </figure>
+      <figure class="card shot">
+        <a href="previews/07-silk.jpg" target="_blank" rel="noopener" aria-label="07-silk — حرير">
+          <img src="previews/07-silk.jpg" alt="07-silk" loading="lazy" width="1600" height="900">
+        </a>
+        <figcaption><span>07-silk</span><span>حرير</span></figcaption>
+      </figure>
+      <figure class="card shot">
+        <a href="previews/09-prism.jpg" target="_blank" rel="noopener" aria-label="09-prism — ألواح">
+          <img src="previews/09-prism.jpg" alt="09-prism" loading="lazy" width="1600" height="900">
+        </a>
+        <figcaption><span>09-prism</span><span>ألواح</span></figcaption>
+      </figure>
+      <figure class="card shot">
+        <a href="previews/12-mist.jpg" target="_blank" rel="noopener" aria-label="12-mist — ضباب">
+          <img src="previews/12-mist.jpg" alt="12-mist" loading="lazy" width="1600" height="900">
+        </a>
+        <figcaption><span>12-mist</span><span>ضباب</span></figcaption>
+      </figure>
+    </div>
+
+    <div class="shots__foot">
+      <p>كل الخلفيات داخل حزمة واحدة، مع سكربت تطبيق لكل الشاشات.</p>
+      <a class="btn btn--ghost btn--sm" href="/download/aurora-dock-wallpapers.zip">
+        تحميل الحزمة (zip)
+      </a>
+    </div>
+  </section>
+
+  <section class="section" id="terms">
+    <div class="section__head">
+      <h2>الشروط والخصوصية</h2>
+      <p>قصيرة وواضحة، مثل الثيم.</p>
+    </div>
+
+    <div class="grid grid--2">
+      <article class="card legal">
+        <h3>الشروط</h3>
+        <ul>
+          <li>الثيم مجاني ومفتوح المصدر بترخيص <b>MIT</b> — عدّله واستخدمه كيف تشاء مع حفظ الإسناد.</li>
+          <li>يُقدَّم «كما هو» بلا ضمان؛ الاستخدام على مسؤوليتك.</li>
+          <li>غير مرتبط رسمياً بـ Seelen UI أو Microsoft.</li>
+          <li>قد تتغيّر بنية الإعدادات بين إصدارات Seelen، فاحتفظ بنسخة من إعداداتك.</li>
+        </ul>
+      </article>
+      <article class="card legal">
+        <h3>بياناتك محفوظة</h3>
+        <ul>
+          <li>لا حسابات، لا تسجيل، لا كوكيز، لا أدوات تحليلات، لا تتبّع.</li>
+          <li>الموقع صفحة ثابتة: لا يرسل شيئاً عنك إلى أي خادم.</li>
+          <li>التحميل يمرّ بخادم الموقع قراءةً فقط من GitHub، ولا يُخزَّن عنك أي شيء.</li>
+          <li>كل إعدادات الثيم تبقى على جهازك.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="closer card">
+    <div>
+      <h2>جاهز؟</h2>
+      <p>ملف واحد. ثلاث خطوات. ثيم كامل.</p>
+    </div>
+    <div class="cta">
+      <button class="btn btn--primary" id="download2" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M12 3.5v11m0 0 4.2-4.2M12 14.5 7.8 10.3M4.5 18.5h15"/></svg>
+        <span class="btn__label">تحميل الثيم</span>
+      </button>
+      <a class="btn btn--ghost" href="https://github.com/babfialbi91-design/seelen-aurora-dock" target="_blank" rel="noopener">المستودع</a>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="foot__left">
+    <svg class="mark mark--sm" viewBox="0 0 32 32" aria-hidden="true">
+      <path d="M20.62 4.55a12.2 12.2 0 1 0 7.05 15.3A10.4 10.4 0 0 1 20.62 4.55Z" fill="none" stroke="currentColor" stroke-width="1.4"/>
+      <circle cx="24.3" cy="10" r="1.9" fill="currentColor"/>
+    </svg>
+    <span>Aurora Dock</span>
+    <span class="foot__sep">·</span>
+    <span>Develop by: <b>Qacem</b></span>
+  </div>
+  <div class="foot__right">
+    <a href="https://github.com/babfialbi91-design/seelen-aurora-dock" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/babfialbi91-design/seelen-aurora-dock/releases" target="_blank" rel="noopener">Releases</a>
+    <a href="https://github.com/babfialbi91-design/seelen-aurora-dock/blob/master/LICENSE" target="_blank" rel="noopener">MIT</a>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <div class="toast__body">
+    <strong>بدأ التنزيل</strong>
+    <p>افتح الملف بنقرة مزدوجة بعد اكتماله، أو اسحبه على نافذة Seelen — سيتفعّل تلقائياً.</p>
+  </div>
+  <button class="toast__x" type="button" aria-label="إغلاق">×</button>
+</div>
+
+<script src="assets/app.js" defer></script>
+</body>
+</html>
