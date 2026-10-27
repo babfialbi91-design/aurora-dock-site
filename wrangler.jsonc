@@ -11,8 +11,5 @@
   },
   "observability": {
     "enabled": true
-  },
-  "vars": {
-    "GH_REPO": "babfialbi91-design/seelen-aurora-dock"
   }
 }

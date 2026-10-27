@@ -1,6 +1,6 @@
 const REPO = "babfialbi91-design/seelen-aurora-dock";
 const API = `https://api.github.com/repos/${REPO}`;
-const RELEASES_TTL = 300;
+const RELEASES_TTL = 900;
 const ASSET_RE = /^[A-Za-z0-9._-]+$/;
 
 function json(data, status = 200, extra = {}) {
@@ -14,31 +14,20 @@ function json(data, status = 200, extra = {}) {
   });
 }
 
-async function gh(env, path, accept) {
-  if (!env.GH_TOKEN) {
-    throw new Response("GitHub token is not configured", { status: 503 });
-  }
-  const res = await fetch(`${path.startsWith("http") ? path : API + path}`, {
-    headers: {
-      authorization: `Bearer ${env.GH_TOKEN}`,
-      accept: accept || "application/vnd.github+json",
-      "user-agent": "aurora-dock-site",
-      "x-github-api-version": "2022-11-28",
-    },
-  });
-  if (!res.ok) {
-    throw new Response(`GitHub responded ${res.status}`, { status: 502 });
-  }
-  return res;
-}
-
-async function latestRelease(env, ctx) {
+async function latestRelease(ctx) {
   const cache = caches.default;
-  const key = new Request(`https://cache.local/latest-release`, { method: "GET" });
+  const key = new Request("https://cache.local/latest-release-v2", { method: "GET" });
   const hit = await cache.match(key);
   if (hit) return hit.json();
 
-  const res = await gh(env, "/releases/latest");
+  const res = await fetch(`${API}/releases/latest`, {
+    headers: {
+      accept: "application/vnd.github+json",
+      "user-agent": "aurora-dock-site",
+    },
+  });
+  if (!res.ok) throw new Response(`GitHub responded ${res.status}`, { status: 502 });
+
   const release = await res.json();
   const data = {
     tag: release.tag_name || "",
@@ -47,7 +36,7 @@ async function latestRelease(env, ctx) {
     files: (release.assets || []).map((a) => ({
       name: a.name,
       size: a.size,
-      url: a.url,
+      url: a.browser_download_url,
     })),
   };
 
@@ -56,40 +45,61 @@ async function latestRelease(env, ctx) {
   return data;
 }
 
-async function handleLatest(env, ctx) {
+async function handleLatest(ctx) {
   try {
-    return json(await latestRelease(env, ctx));
+    return json(await latestRelease(ctx));
   } catch (err) {
     if (err instanceof Response) return err;
     return json({ error: "unreachable" }, 502);
   }
 }
 
-async function handleDownload(env, ctx, name) {
+async function handleDownload(ctx, name) {
   if (!ASSET_RE.test(name) || !/\.(slu|zip)$/i.test(name)) {
     return new Response("Not found", { status: 404 });
   }
 
+  let file;
   try {
-    const release = await latestRelease(env, ctx);
-    const file = release.files.find((f) => f.name === name);
+    const release = await latestRelease(ctx);
+    file = release.files.find((f) => f.name === name);
     if (!file) return new Response("Asset not in latest release", { status: 404 });
-
-    const assetRes = await gh(env, file.url, "application/octet-stream");
-    const headers = new Headers({
-      "content-type": "application/octet-stream",
-      "content-disposition": `attachment; filename="${name}"`,
-      "cache-control": "public, max-age=300",
-      "x-content-type-options": "nosniff",
-    });
-    const len = assetRes.headers.get("content-length");
-    if (len) headers.set("content-length", len);
-
-    return new Response(assetRes.body, { status: 200, headers });
   } catch (err) {
     if (err instanceof Response) return err;
     return new Response("Download failed", { status: 502 });
   }
+
+  const sources = [
+    `https://github.com/${REPO}/releases/latest/download/${name}`,
+    file.url,
+  ];
+
+  let asset = null;
+  for (const src of sources) {
+    if (!src) continue;
+    try {
+      const res = await fetch(src, { headers: { "user-agent": "aurora-dock-site" } });
+      if (res.ok && res.body) {
+        asset = res;
+        break;
+      }
+    } catch (e) {
+      /* try the next source */
+    }
+  }
+
+  if (!asset) return new Response("Download failed", { status: 502 });
+
+  const headers = new Headers({
+    "content-type": "application/octet-stream",
+    "content-disposition": `attachment; filename="${name}"`,
+    "cache-control": "public, max-age=300",
+    "x-content-type-options": "nosniff",
+  });
+  const len = asset.headers.get("content-length");
+  if (len) headers.set("content-length", len);
+
+  return new Response(asset.body, { status: 200, headers });
 }
 
 export default {
@@ -101,11 +111,11 @@ export default {
     }
 
     if (url.pathname === "/api/latest") {
-      return handleLatest(env, ctx);
+      return handleLatest(ctx);
     }
 
     if (url.pathname.startsWith("/download/")) {
-      return handleDownload(env, ctx, decodeURIComponent(url.pathname.slice(10)));
+      return handleDownload(ctx, decodeURIComponent(url.pathname.slice(10)));
     }
 
     return env.ASSETS.fetch(request);
