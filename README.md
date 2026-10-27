@@ -3,8 +3,18 @@
 Live: **https://aurora-dock.babfialbi91.workers.dev**
 
 Static landing page for the **Aurora Dock** theme (Seelen UI), served by a tiny
-Cloudflare Worker. The worker only resolves the newest release and redirects;
-no tokens, no secrets, no build step.
+Cloudflare Worker. No tokens, no secrets, no build step — `public/` is shipped
+as-is and the worker only resolves the newest release and streams the asset.
+
+## What's on the page
+
+- Dark **and** light mode (system-aware, saved in `localStorage`, `?theme=light|dark` for sharing).
+- One download button: real progress (streamed, not simulated), file size from the API,
+  then a "done + how to activate" toast. Clicking downloads the latest `.slu`.
+- Interactive dock mockup — the icon wave follows the pointer, and four swatches
+  swap the wallpaper behind it.
+- 12 wallpaper previews (click to open full size) + wallpaper pack download.
+- Terms, privacy ("no cookies, no tracking"), `Develop by: Qacem`.
 
 ```
 public/                 served as-is
@@ -22,9 +32,9 @@ wrangler.jsonc          Worker + static assets
 | Route | What it does |
 | --- | --- |
 | `/` | the page |
-| `/api/latest` | `{ tag, published, files[] }` from the theme repo (cached 5 min) |
-| `/download/aurora-dock.slu` | `302` → newest release asset |
-| `/download/aurora-dock-wallpapers.zip` | `302` → newest wallpaper pack |
+| `/api/latest` | `{ tag, published, files[] }` from the theme repo (cached 15 min) |
+| `/download/aurora-dock.slu` | newest `.slu`, streamed with `Content-Disposition: attachment` |
+| `/download/aurora-dock-wallpapers.zip` | newest wallpaper pack |
 
 Only `.slu` / `.zip` names matching `[A-Za-z0-9._-]+` are accepted; anything else is 404.
 
