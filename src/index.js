@@ -94,18 +94,77 @@ async function handleLatest(ctx) {
   }
 }
 
+function decodeEntities(s) {
+  return s
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&");
+}
+
+function htmlToText(html) {
+  return html
+    .replace(/<\/(p|li|h[1-6]|div|blockquote)>/gi, "\n")
+    .replace(/<li[^>]*>/gi, "- ")
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<[^>]+>/g, "")
+    .replace(/[ \t]+\n/g, "\n")
+    .trim();
+}
+
+/**
+ * Fallback for the release list that never touches api.github.com.
+ * GitHub publishes a releases Atom feed with the same titles, dates and
+ * bodies; it is served as a normal web page, so it is not rate limited the
+ * way the anonymous API is.
+ */
+async function releasesViaAtom(count) {
+  const res = await fetch(`https://github.com/${REPO}/releases.atom`, {
+    headers: { "user-agent": AUTHORS, accept: "application/atom+xml" },
+  });
+  if (!res.ok) throw new Error(`atom ${res.status}`);
+
+  const xml = await res.text();
+  const entries = xml.split("<entry>").slice(1);
+
+  return entries
+    .map((entry) => {
+      const link = (entry.match(/<link[^>]+href="([^"]+)"/) || [])[1] || "";
+      const tag = (link.match(/\/tag\/([^/?#"]+)$/) || [])[1] || "";
+      const title = (entry.match(/<title[^>]*>([\s\S]*?)<\/title>/) || [])[1] || "";
+      const updated = (entry.match(/<updated>([\s\S]*?)<\/updated>/) || [])[1] || "";
+      const content = (entry.match(/<content[^>]*>([\s\S]*?)<\/content>/) || [])[1] || "";
+
+      return {
+        tag,
+        name: decodeEntities(title).trim(),
+        published: updated,
+        body: htmlToText(decodeEntities(content)).slice(0, 2000),
+        url: link || `https://github.com/${REPO}/releases/tag/${tag}`,
+        prerelease: false,
+        files: [],
+      };
+    })
+    .filter((r) => r.tag)
+    .slice(0, count);
+}
+
 async function latestReleases(ctx, count = 5) {
   const cache = caches.default;
   const key = new Request(`https://cache.local/releases-v5-${count}`, { method: "GET" });
   const hit = await cache.match(key);
   if (hit) return hit.json();
 
-  const res = await gh(`/releases?per_page=${count}`);
-  if (!res.ok) throw new Error(`GitHub responded ${res.status}`);
+  let releases;
+  let usedFallback = false;
+  try {
+    const res = await gh(`/releases?per_page=${count}`);
+    if (!res.ok) throw new Error(`GitHub responded ${res.status}`);
 
-  const list = await res.json();
-  const payload = {
-    releases: (Array.isArray(list) ? list : []).map((r) => ({
+    const list = await res.json();
+    releases = (Array.isArray(list) ? list : []).map((r) => ({
       tag: r.tag_name || "",
       name: r.name || r.tag_name || "",
       published: r.published_at || "",
@@ -113,10 +172,17 @@ async function latestReleases(ctx, count = 5) {
       url: r.html_url || "",
       prerelease: !!r.prerelease,
       files: (r.assets || []).map((a) => ({ name: a.name, size: a.size })),
-    })),
-  };
+    }));
+  } catch (err) {
+    usedFallback = true;
+    releases = await releasesViaAtom(count);
+  }
 
-  const cached = json(payload, 200, { "cache-control": "public, max-age=21600" });
+  const payload = { releases };
+
+  // The Atom feed has no asset sizes; come back to the API sooner.
+  const ttl = usedFallback ? 1800 : 21600;
+  const cached = json(payload, 200, { "cache-control": `public, max-age=${ttl}` });
   ctx.waitUntil(cache.put(key, cached.clone()));
   return payload;
 }

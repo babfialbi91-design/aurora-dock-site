@@ -481,7 +481,7 @@
       var raw = localStorage.getItem("aurora-releases");
       if (!raw) return null;
       var data = JSON.parse(raw);
-      if (!data.r || Date.now() - data.t > 3600e3) return null;
+      if (!data.r || Date.now() - data.t > 86400e3) return null;
       return data.r;
     } catch (e) {
       return null;
