@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>404 — الصفحة غير موجودة · Aurora Dock</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#08090a">
+<meta name="color-scheme" content="dark light">
+<script>
+  (function () {
+    try {
+      var q = new URLSearchParams(location.search).get("theme");
+      var t = q === "light" || q === "dark" ? q : localStorage.getItem("aurora-theme");
+      if (t !== "light" && t !== "dark") {
+        t = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+      }
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {}
+  })();
+</script>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<style>
+  :root {
+    --bg: #08090a;
+    --ink: #f4f5f7;
+    --muted: rgba(255, 255, 255, .58);
+    --faint: rgba(255, 255, 255, .34);
+    --line: rgba(255, 255, 255, .1);
+    --line-strong: rgba(255, 255, 255, .2);
+    --btn-bg: #fff;
+    --btn-ink: #08090a;
+    --font: "Segoe UI", "Noto Sans Arabic", "Noto Kufi Arabic", Tahoma, system-ui, sans-serif;
+    --mono: "Cascadia Code", "SF Mono", Consolas, monospace;
+    --ease: cubic-bezier(.22, .61, .36, 1);
+    color-scheme: dark;
+  }
+
+  [data-theme="light"] {
+    --bg: #f3f3f0;
+    --ink: #0d0e10;
+    --muted: rgba(13, 14, 16, .64);
+    --faint: rgba(13, 14, 16, .44);
+    --line: rgba(13, 14, 16, .12);
+    --line-strong: rgba(13, 14, 16, .24);
+    --btn-bg: #131417;
+    --btn-ink: #f7f7f5;
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 32px 22px;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  .wall {
+    position: fixed;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(8, 9, 10, .55), rgba(8, 9, 10, .9) 55%, var(--bg)),
+      url("/previews/03-dunes.webp") 50% 40% / cover no-repeat;
+    opacity: .6;
+    z-index: 0;
+  }
+
+  [data-theme="light"] .wall { opacity: .18; filter: invert(1) grayscale(1); }
+
+  .card {
+    position: relative;
+    z-index: 1;
+    width: min(560px, 100%);
+    padding: 44px 40px 40px;
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .02));
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    box-shadow: 0 40px 90px -50px rgba(0, 0, 0, .9), 0 1px 0 rgba(255, 255, 255, .08) inset;
+  }
+
+  [data-theme="light"] .card {
+    background: linear-gradient(180deg, rgba(255, 255, 255, .92), rgba(255, 255, 255, .68));
+    box-shadow: 0 40px 90px -60px rgba(10, 11, 13, .5);
+  }
+
+  .code {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--faint);
+    letter-spacing: .18em;
+    margin-bottom: 18px;
+  }
+
+  .code i { flex: 1; height: 1px; background: var(--line); }
+
+  h1 {
+    margin: 0 0 12px;
+    font-size: clamp(34px, 6vw, 52px);
+    line-height: 1.15;
+    font-weight: 620;
+    letter-spacing: -.02em;
+  }
+
+  h1 em {
+    font-style: normal;
+    color: var(--faint);
+  }
+
+  p { margin: 0 0 26px; color: var(--muted); font-size: 15px; line-height: 1.75; }
+
+  code.inline {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    direction: ltr;
+    unicode-bidi: isolate;
+    padding: 2px 7px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, .05);
+    color: var(--ink);
+  }
+
+  .row { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 13px 22px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-size: 14.5px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform .25s var(--ease), border-color .25s var(--ease), background .25s var(--ease);
+  }
+
+  .btn--solid { background: var(--btn-bg); color: var(--btn-ink); }
+  .btn--solid:hover { transform: translateY(-2px); }
+  .btn--ghost { color: var(--ink); border-color: var(--line); }
+  .btn--ghost:hover { border-color: var(--line-strong); transform: translateY(-2px); }
+
+  .foot {
+    margin-top: 30px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    font-size: 12px;
+    color: var(--faint);
+  }
+
+  .foot a { color: var(--muted); text-decoration: none; }
+  .foot a:hover { color: var(--ink); }
+
+  @media (max-width: 480px) {
+    .card { padding: 32px 24px 28px; border-radius: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="wall" aria-hidden="true"></div>
+
+<main class="card">
+  <div class="code"><span>404 / NOT FOUND</span><i></i></div>
+  <h1>الصفحة مش هنا.<br><em>الثيم موجود.</em></h1>
+  <p>
+    الرابط اللي فتحته ما يقود لشي في Aurora Dock. يمكن الصفحة انتقلت، أو الرابط فيه حرف زايد.
+  </p>
+  <div class="row">
+    <a class="btn btn--solid" href="/">الرئيسية</a>
+    <a class="btn btn--ghost" href="/#wallpapers">الخلفيات</a>
+    <a class="btn btn--ghost" href="/download/aurora-dock.slu">تحميل الثيم</a>
+  </div>
+  <div class="foot">
+    <span>Aurora Dock · Develop by: <b>Qacem</b></span>
+    <a href="https://github.com/babfialbi91-design/seelen-aurora-dock">GitHub</a>
+  </div>
+</main>
+</body>
+</html>

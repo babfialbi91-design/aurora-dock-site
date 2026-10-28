@@ -20,17 +20,28 @@
   })();
 </script>
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Aurora Dock">
+<meta property="og:locale" content="ar_AR">
 <meta property="og:title" content="Aurora Dock — هوية زجاجية لـ Seelen UI">
 <meta property="og:description" content="دوك زجاجي أحادي اللون، 19 نمط وجت، و12 خلفية 4K. تحميل مباشر بملف واحد.">
 <meta property="og:url" content="https://aurora-dock.babfialbi91.workers.dev/">
-<meta property="og:image" content="https://aurora-dock.babfialbi91.workers.dev/previews/00-set.jpg">
+<meta property="og:image" content="https://aurora-dock.babfialbi91.workers.dev/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Aurora Dock — دوك زجاجي فوق خلفية داكنة">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://aurora-dock.babfialbi91.workers.dev/previews/00-set.jpg">
+<meta name="twitter:title" content="Aurora Dock — هوية زجاجية لـ Seelen UI">
+<meta name="twitter:description" content="دوك زجاجي أحادي اللون، شريط علوي، Alt+Tab ومساحات عمل، مع 12 خلفية 4K.">
+<meta name="twitter:image" content="https://aurora-dock.babfialbi91.workers.dev/og.jpg">
 <link rel="canonical" href="https://aurora-dock.babfialbi91.workers.dev/">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" as="image" href="previews/09-prism.webp" fetchpriority="high">
+<link rel="preload" as="image" href="shots/dock-dark.webp">
 <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
+
+<a class="skip" href="#top">تخطَّ إلى المحتوى</a>
 
 <div class="grain" aria-hidden="true"></div>
 <div class="glow" aria-hidden="true"></div>
@@ -47,8 +58,9 @@
   <nav class="nav__links" aria-label="التنقل">
     <a href="#install">التركيب</a>
     <a href="#features">المزايا</a>
+    <a href="#device">على الجهاز</a>
     <a href="#wallpapers">الخلفيات</a>
-    <a href="#terms">الشروط</a>
+    <a href="#news">ما الجديد</a>
   </nav>
 
   <div class="nav__side">
@@ -88,6 +100,7 @@
       </div>
 
       <p class="fineprint" id="download-hint">ملف واحد · بلا تثبيت · يفتح مباشرة في Seelen</p>
+      <a class="chip-new" id="new-badge" href="#news" hidden><span class="chip-new__dot"></span> جديد · <span id="new-badge-text"></span></a>
       <noscript><p class="fineprint"><a href="/download/aurora-dock.slu" style="text-decoration:underline">تحميل مباشر لملف الثيم</a></p></noscript>
 
       <dl class="stats">
@@ -99,7 +112,7 @@
 
     <div class="hero__stage" aria-hidden="true">
       <div class="screen">
-        <img class="screen__wall" src="previews/09-prism.jpg" alt="" width="1600" height="900" decoding="async">
+        <img class="screen__wall" src="previews/09-prism.webp" alt="" width="1600" height="900" decoding="async" fetchpriority="high" style="opacity:1">
         <div class="screen__shade"></div>
         <div class="screen__bar"><span></span><span></span><span></span></div>
         <div class="dock" id="dock">
@@ -115,10 +128,10 @@
       <div class="stage__foot">
         <p class="stage__hint" id="stage-hint">مرّر المؤشر على الدوك وشوف الموجة</p>
         <div class="swatches" role="group" aria-label="معاينة الخلفيات">
-          <button class="swatch" type="button" data-wall="previews/03-dunes.jpg" data-name="03-dunes" aria-pressed="false" aria-label="03-dunes"><img src="previews/03-dunes.jpg" alt="" loading="lazy"></button>
-          <button class="swatch" type="button" data-wall="previews/07-silk.jpg" data-name="07-silk" aria-pressed="false" aria-label="07-silk"><img src="previews/07-silk.jpg" alt="" loading="lazy"></button>
-          <button class="swatch" type="button" data-wall="previews/09-prism.jpg" data-name="09-prism" aria-pressed="true" aria-label="09-prism"><img src="previews/09-prism.jpg" alt="" loading="lazy"></button>
-          <button class="swatch" type="button" data-wall="previews/12-mist.jpg" data-name="12-mist" aria-pressed="false" aria-label="12-mist"><img src="previews/12-mist.jpg" alt="" loading="lazy"></button>
+          <button class="swatch" type="button" data-wall="previews/03-dunes.webp" data-name="03-dunes" aria-pressed="false" aria-label="03-dunes"><img src="previews/03-dunes.webp" alt="" loading="lazy"></button>
+          <button class="swatch" type="button" data-wall="previews/07-silk.webp" data-name="07-silk" aria-pressed="false" aria-label="07-silk"><img src="previews/07-silk.webp" alt="" loading="lazy"></button>
+          <button class="swatch" type="button" data-wall="previews/09-prism.webp" data-name="09-prism" aria-pressed="true" aria-label="09-prism"><img src="previews/09-prism.webp" alt="" loading="lazy"></button>
+          <button class="swatch" type="button" data-wall="previews/12-mist.webp" data-name="12-mist" aria-pressed="false" aria-label="12-mist"><img src="previews/12-mist.webp" alt="" loading="lazy"></button>
         </div>
       </div>
       <div class="seam" aria-hidden="true"></div>
@@ -188,6 +201,37 @@
     </div>
   </section>
 
+  <section class="section" id="device">
+    <div class="section__head">
+      <h2>على الجهاز</h2>
+      <p>لقطات حقيقية من الشاشة — لا نماذج، لا تركيب.</p>
+    </div>
+
+    <div class="rig card" id="rig" data-mode="dark">
+      <img class="rig__wall" src="previews/09-prism.webp" alt="" width="1600" height="900" loading="lazy" decoding="async">
+      <div class="rig__veil" aria-hidden="true"></div>
+
+      <div class="rig__stage">
+        <img class="rig__dock" data-shot="dock" src="shots/dock-dark.webp" alt="دوك Aurora Dock في الوضع الداكن: أيقونات زجاجية سوداء وموجة تكبير" width="739" height="61" loading="lazy" decoding="async">
+      </div>
+
+      <div class="rig__hud">
+        <span class="rig__cap">الشاشة الثانية · <bdi dir="ltr">1024×1280</bdi></span>
+        <div class="seg" role="group" aria-label="معاينة الوضعين">
+          <button class="seg__btn is-on" type="button" data-mode="dark" aria-pressed="true">داكن</button>
+          <button class="seg__btn" type="button" data-mode="light" aria-pressed="false">فاتح</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="rig__legend">
+      <span><b>موجة</b> تكبر تحت المؤشر</span>
+      <span><b>شارة</b> النافذة النشطة</span>
+      <span><b>تراي</b> يظهر عند الحاجة</span>
+      <span><b>8px</b> هامش عن الحافة</span>
+    </div>
+  </section>
+
   <section class="section" id="wallpapers">
     <div class="section__head">
       <h2>12 خلفية 4K</h2>
@@ -196,26 +240,26 @@
 
     <div class="shots">
       <figure class="card shot">
-        <a href="previews/03-dunes.jpg" target="_blank" rel="noopener" aria-label="03-dunes — كثبان">
-          <img src="previews/03-dunes.jpg" alt="03-dunes" loading="lazy" width="1600" height="900">
+        <a href="previews/03-dunes.webp" target="_blank" rel="noopener" aria-label="03-dunes — كثبان">
+          <img src="previews/03-dunes.webp" alt="03-dunes" loading="lazy" width="1600" height="900">
         </a>
         <figcaption><span>03-dunes</span><span>كثبان</span></figcaption>
       </figure>
       <figure class="card shot">
-        <a href="previews/07-silk.jpg" target="_blank" rel="noopener" aria-label="07-silk — حرير">
-          <img src="previews/07-silk.jpg" alt="07-silk" loading="lazy" width="1600" height="900">
+        <a href="previews/07-silk.webp" target="_blank" rel="noopener" aria-label="07-silk — حرير">
+          <img src="previews/07-silk.webp" alt="07-silk" loading="lazy" width="1600" height="900">
         </a>
         <figcaption><span>07-silk</span><span>حرير</span></figcaption>
       </figure>
       <figure class="card shot">
-        <a href="previews/09-prism.jpg" target="_blank" rel="noopener" aria-label="09-prism — ألواح">
-          <img src="previews/09-prism.jpg" alt="09-prism" loading="lazy" width="1600" height="900">
+        <a href="previews/09-prism.webp" target="_blank" rel="noopener" aria-label="09-prism — ألواح">
+          <img src="previews/09-prism.webp" alt="09-prism" loading="lazy" width="1600" height="900">
         </a>
         <figcaption><span>09-prism</span><span>ألواح</span></figcaption>
       </figure>
       <figure class="card shot">
-        <a href="previews/12-mist.jpg" target="_blank" rel="noopener" aria-label="12-mist — ضباب">
-          <img src="previews/12-mist.jpg" alt="12-mist" loading="lazy" width="1600" height="900">
+        <a href="previews/12-mist.webp" target="_blank" rel="noopener" aria-label="12-mist — ضباب">
+          <img src="previews/12-mist.webp" alt="12-mist" loading="lazy" width="1600" height="900">
         </a>
         <figcaption><span>12-mist</span><span>ضباب</span></figcaption>
       </figure>
@@ -225,6 +269,26 @@
       <p>كل الخلفيات داخل حزمة واحدة، مع سكربت تطبيق لكل الشاشات.</p>
       <a class="btn btn--ghost btn--sm" href="/download/aurora-dock-wallpapers.zip">
         تحميل الحزمة (zip)
+      </a>
+    </div>
+  </section>
+
+  <section class="section" id="news">
+    <div class="section__head">
+      <h2>ما الجديد</h2>
+      <p>آخر ثلاثة إصدارات، مسحوبة من GitHub مباشرة.</p>
+    </div>
+
+    <div class="news" id="news-list">
+      <noscript>
+        <p class="news__fallback">افتح <a href="https://github.com/babfialbi91-design/seelen-aurora-dock/releases">صفحة الإصدارات على GitHub</a> لرؤية سجل التغييرات.</p>
+      </noscript>
+    </div>
+
+    <div class="news__foot">
+      <a class="btn btn--ghost btn--sm" href="https://github.com/babfialbi91-design/seelen-aurora-dock/releases" target="_blank" rel="noopener">
+        كل الإصدارات
+        <svg viewBox="0 0 16 16" aria-hidden="true" width="12" height="12"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M5 11 11 5M6 5h5v5"/></svg>
       </a>
     </div>
   </section>

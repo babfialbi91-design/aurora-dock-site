@@ -304,6 +304,222 @@
     measure();
   }
 
+  /* ---------- device rig ---------- */
+
+  var rig = document.getElementById("rig");
+  var rigDock = rig && rig.querySelector(".rig__dock");
+  var rigBtns = rig ? Array.prototype.slice.call(rig.querySelectorAll(".seg__btn")) : [];
+  var SHOTS = { dark: "shots/dock-dark.webp", light: "shots/dock-light.webp" };
+  var shotCache = {};
+
+  function warmShots() {
+    Object.keys(SHOTS).forEach(function (k) {
+      if (shotCache[k]) return;
+      var im = new Image();
+      im.src = SHOTS[k];
+      shotCache[k] = im;
+    });
+  }
+
+  function setMode(mode) {
+    if (!rig || !rigDock || !SHOTS[mode] || rig.getAttribute("data-mode") === mode) return;
+    rig.setAttribute("data-mode", mode);
+
+    rigBtns.forEach(function (b) {
+      var on = b.getAttribute("data-mode") === mode;
+      b.classList.toggle("is-on", on);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+    });
+
+    var apply = function () {
+      rigDock.classList.add("is-swapping");
+      setTimeout(function () {
+        rigDock.src = SHOTS[mode];
+        rigDock.classList.remove("is-swapping");
+      }, 140);
+    };
+
+    var warm = shotCache[mode];
+    if (warm && warm.complete && warm.naturalWidth) apply();
+    else {
+      var img = new Image();
+      img.onload = apply;
+      img.onerror = apply;
+      img.src = SHOTS[mode];
+      shotCache[mode] = img;
+    }
+  }
+
+  rigBtns.forEach(function (b) {
+    b.addEventListener("click", function () { setMode(b.getAttribute("data-mode")); });
+  });
+
+  if (rig && "requestIdleCallback" in window) {
+    requestIdleCallback(warmShots, { timeout: 2600 });
+  } else {
+    setTimeout(warmShots, 1800);
+  }
+
+  /* ---------- changelog ---------- */
+
+  var newsList = document.getElementById("news-list");
+  var newBadge = document.getElementById("new-badge");
+  var newBadgeText = document.getElementById("new-badge-text");
+  var dateFmt = null;
+
+  try {
+    dateFmt = new Intl.DateTimeFormat("ar-u-nu-latn", { day: "numeric", month: "long", year: "numeric" });
+  } catch (e) {
+    dateFmt = null;
+  }
+
+  function cleanNotes(body) {
+    var out = [];
+    var seen = {};
+    (body || "").split(/\r?\n/).forEach(function (raw) {
+      var line = raw.trim();
+      if (!line) return;
+      if (/^#{1,6}\s/.test(line)) return;
+      if (/^\**full changelog\**/i.test(line)) return;
+      line = line.replace(/^[-*+]\s+/, "").replace(/^\[[ xX]\]\s+/, "");
+      line = line.replace(/\[([^\]]+)\]\([^)]*\)/g, "$1");
+      line = line.replace(/https?:\/\/\S+/g, "").replace(/[*_`>]/g, "").replace(/\s+/g, " ").trim();
+      if (line.length < 3) return;
+      if (seen[line]) return;
+      seen[line] = 1;
+      out.push(line);
+    });
+    return out.slice(0, 3);
+  }
+
+  function renderReleases(list) {
+    if (!newsList || !list || !list.length) return;
+
+    var frag = document.createDocumentFragment();
+    var now = Date.now();
+
+    list.slice(0, 3).forEach(function (rel, i) {
+      var card = document.createElement("article");
+      card.className = "card rel" + (i === 0 ? " is-latest" : "");
+
+      var meta = document.createElement("div");
+      meta.className = "rel__meta";
+
+      var tag = document.createElement("span");
+      tag.className = "rel__tag";
+      var dot = document.createElement("i");
+      tag.appendChild(dot);
+      tag.appendChild(document.createTextNode(rel.tag || "—"));
+
+      var date = document.createElement("span");
+      date.className = "rel__date";
+      var d = rel.published ? new Date(rel.published) : null;
+      date.textContent = d && !isNaN(d) ? (dateFmt ? dateFmt.format(d) : d.toISOString().slice(0, 10)) : "";
+
+      meta.appendChild(tag);
+      meta.appendChild(date);
+
+      var body = document.createElement("div");
+      body.className = "rel__body";
+
+      var h = document.createElement("h3");
+      h.appendChild(document.createTextNode(rel.name || rel.tag || "إصدار"));
+      if (i === 0 && d && now - d.getTime() < 7 * 864e5) {
+        var fresh = document.createElement("span");
+        fresh.className = "rel__badge";
+        fresh.textContent = "جديد";
+        h.appendChild(fresh);
+      }
+
+      var notes = cleanNotes(rel.body);
+      body.appendChild(h);
+
+      if (notes.length) {
+        var ul = document.createElement("ul");
+        ul.className = "rel__notes";
+        notes.forEach(function (n) {
+          var li = document.createElement("li");
+          li.textContent = n;
+          ul.appendChild(li);
+        });
+        body.appendChild(ul);
+      } else {
+        var p = document.createElement("p");
+        p.className = "rel__notes";
+        p.textContent = "تحديثات صيانة وتحسينات داخلية.";
+        body.appendChild(p);
+      }
+
+      var more = document.createElement("a");
+      more.className = "rel__more";
+      more.href = rel.url || "https://github.com/babfialbi91-design/seelen-aurora-dock/releases";
+      more.target = "_blank";
+      more.rel = "noopener";
+      more.textContent = "التفاصيل ↗";
+
+      card.appendChild(meta);
+      card.appendChild(body);
+      card.appendChild(more);
+      frag.appendChild(card);
+    });
+
+    newsList.textContent = "";
+    newsList.appendChild(frag);
+
+    var latest = list[0];
+    if (latest && latest.published && newBadge && newBadgeText) {
+      var age = now - new Date(latest.published).getTime();
+      if (age >= 0 && age < 7 * 864e5) {
+        newBadgeText.textContent = latest.tag || latest.name || "";
+        newBadge.hidden = false;
+      }
+    }
+  }
+
+  function cachedReleases() {
+    try {
+      var raw = localStorage.getItem("aurora-releases");
+      if (!raw) return null;
+      var data = JSON.parse(raw);
+      if (!data.r || Date.now() - data.t > 3600e3) return null;
+      return data.r;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  var cached = cachedReleases();
+  if (cached) renderReleases(cached);
+
+  if (newsList && "fetch" in window) {
+    if (!cached) {
+      for (var sk = 0; sk < 3; sk++) {
+        var s = document.createElement("div");
+        s.className = "news__skeleton";
+        newsList.appendChild(s);
+      }
+    }
+
+    fetch("/api/releases", { headers: { Accept: "application/json" } })
+      .then(function (r) {
+        return r.ok ? r.json() : null;
+      })
+      .then(function (data) {
+        var list = data && data.releases;
+        if (!list || !list.length) throw new Error("empty");
+        renderReleases(list);
+        try {
+          localStorage.setItem("aurora-releases", JSON.stringify({ r: list, t: Date.now() }));
+        } catch (e) {}
+      })
+      .catch(function () {
+        if (!cached && newsList.querySelector(".news__skeleton")) {
+          newsList.innerHTML =
+            '<p class="news__fallback">تعذّر تحميل القائمة الآن — افتح <a href="https://github.com/babfialbi91-design/seelen-aurora-dock/releases">صفحة الإصدارات على GitHub</a>.</p>';
+        }
+      });
+  }
+
   /* ---------- reveal ---------- */
 
   var targets = document.querySelectorAll(".section__head, .card, .strip, .closer");

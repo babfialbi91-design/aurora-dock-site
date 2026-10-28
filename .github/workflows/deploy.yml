@@ -1,0 +1,63 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Cloudflare Worker
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check secrets
+        id: guard
+        env:
+          TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          ACCOUNT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::warning title=Deploy skipped::CLOUDFLARE_API_TOKEN is not set. Add it in Settings → Secrets and variables → Actions."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          elif [ -z "$ACCOUNT" ]; then
+            echo "::warning title=Deploy skipped::CLOUDFLARE_ACCOUNT_ID is not set."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Deploy
+        if: steps.guard.outputs.skip == 'false'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy
+          quiet: false
+
+      - name: Smoke test
+        if: steps.guard.outputs.skip == 'false'
+        run: |
+          set -e
+          base="https://aurora-dock.babfialbi91.workers.dev"
+          for path in / /api/latest /api/releases /og.jpg /404.html; do
+            code=$(curl -s -o /dev/null -w "%{http_code}" "$base$path")
+            echo "$path -> $code"
+            [ "$code" = "200" ]
+          done
