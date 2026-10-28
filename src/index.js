@@ -70,7 +70,7 @@ async function viaRedirect() {
 
 async function latestRelease(ctx) {
   const cache = caches.default;
-  const key = new Request("https://cache.local/latest-release-v3", { method: "GET" });
+  const key = new Request("https://cache.local/latest-release-v4", { method: "GET" });
   const hit = await cache.match(key);
   if (hit) return hit.json();
 
@@ -96,7 +96,7 @@ async function handleLatest(ctx) {
 
 async function latestReleases(ctx, count = 5) {
   const cache = caches.default;
-  const key = new Request(`https://cache.local/releases-v3-${count}`, { method: "GET" });
+  const key = new Request(`https://cache.local/releases-v5-${count}`, { method: "GET" });
   const hit = await cache.match(key);
   if (hit) return hit.json();
 
